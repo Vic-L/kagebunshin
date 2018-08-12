@@ -31,8 +31,9 @@ functions:
     handler: handler.onUpload
     tags:
       Name: ${self:custom.provider.awsTagName}
-    ## only use events for testing on dev and local
-    ## in production this lambda should be used as a event listener on S3 bucket
+    # only use events for testing on dev and local
+    # in production this lambda should be used as a event listener on S3 bucket
+    ## UNCOMMENT FOR DEVELOPMENT
     # events:
     #   - http:
     #       path: '/onUpload'
