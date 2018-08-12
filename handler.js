@@ -10,10 +10,15 @@ module.exports.onUpload = (event, context, callback) => {
   //** event.body is used for debugging in sls offline 
   //** event is a string when debugging using postman
   //** event is a JSON when triggered by an S3 event
-  
-  // const srcS3 = JSON.parse(event.body).Records[0].s3 // for dev in sls offline
-  const srcS3 = event.Records[0].s3 // in production with S3 event as input
-console.log("srcS3", srcS3)
+
+  let srcS3 = ''
+  if (process.env.STAGE === 'dev') {
+    srcS3 = JSON.parse(event.body) // for dev in sls offline
+  } else {
+    srcS3 = event.Records[0].s3 // in production with S3 event as input
+  }
+console.log("srcS3", srcS3) // for logging purpose
+
   const srcBucket = srcS3.bucket.name
   const srcKey = srcS3.object.key
 
