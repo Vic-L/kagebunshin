@@ -59,7 +59,7 @@ console.log("srcS3", srcS3) // for logging purpose
         if (err) return callback(null, handleS3Error(err));
 
         let dstKey = srcKey.replace(/\.jpg$/, `_${width}.jpg`) // add dimension to name of file
-
+console.log('data', JSON.stringify(data))
         const dstParams = {
           Bucket: dstBucket,
           Key: dstKey,
