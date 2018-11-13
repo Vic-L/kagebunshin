@@ -66,7 +66,6 @@ console.log("srcS3", srcS3) // for logging purpose
           Body: buffer,
           ACL: "public-read",
           ContentType: data.ContentType,
-          ContentLength: data.ContentLength,
           CacheControl: "public, max-age=604800"
         }
 
