@@ -46,7 +46,7 @@ It should be a `POST` request to the url `http://localhost:8000/onUpload`, with 
 
 This is the exact [JSON structure of a S3 put event](https://docs.aws.amazon.com/lambda/latest/dg/eventsources.html#eventsources-s3-put).
 
-Replace the `<BUCKET_NAME>` and `path/to/image.jpg` accordingly to your object in an S3 bucket.
+Replace the `<BUCKET_NAME>` and `path/to/image.jpg` accordingly to your object in an S3 bucket. This will be the request body to be sent as a POST request during development or debugging. Note that the actual object structure is different (as shown correctly in `event.json`), but for development environment, this snippet is expected by the code.
 
 Then run this command to start development:
 
