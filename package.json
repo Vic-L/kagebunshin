@@ -12,9 +12,6 @@
   },
   "author": "Vic-L",
   "license": "MIT",
-  "devDependencies": {
-    "serverless-offline": "^3.16.0"
-  },
   "dependencies": {
     "aws-sdk": "^2.188.0",
     "gm": "^1.23.1"

@@ -39,6 +39,3 @@ functions:
     #       path: '/onUpload'
     #       method: post
     #       cors: true
-
-plugins:
-  - serverless-offline
