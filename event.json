@@ -1,42 +1,42 @@
-{  
-   "Records":[  
-      {  
+{
+   "Records":[
+      {
          "eventVersion":"2.0",
          "eventSource":"aws:s3",
          "awsRegion":"us-east-1",
          "eventTime": "2017-01-01T00:00:00.000Z",
          "eventName":"event-type",
-         "userIdentity":{  
+         "userIdentity":{
             "principalId":"Amazon-customer-ID-of-the-user-who-caused-the-event"
          },
-         "requestParameters":{  
+         "requestParameters":{
             "sourceIPAddress":"ip-address-where-request-came-from"
          },
-         "responseElements":{  
+         "responseElements":{
             "x-amz-request-id":"Amazon S3 generated request ID",
             "x-amz-id-2":"Amazon S3 host that processed the request"
          },
-         "s3":{  
+         "s3":{
             "s3SchemaVersion":"1.0",
             "configurationId":"ID found in the bucket notification configuration",
             "bucket":{
-               "name":"change the bucket name to your test/dev bucket name",
-               "ownerIdentity":{  
+               "name":"<BUCKET_NAME>",
+               "ownerIdentity":{
                   "principalId":"Amazon-customer-ID-of-the-bucket-owner"
                },
                "arn":"bucket-ARN"
             },
-            "object":{  
-               "key":"change the object key to your test/dev object",
+            "object":{
+               "key":"<PATH_TO_IMAGE>",
                "size": 128,
                "eTag":"object eTag",
                "versionId":"object version if bucket is versioning-enabled, otherwise null",
-               "sequencer": "a string representation of a hexadecimal value used to determine event sequence, only used with PUTs and DELETEs"            
+               "sequencer": "a string representation of a hexadecimal value used to determine event sequence, only used with PUTs and DELETEs"
             }
          }
       },
       {
-          // Additional events
+          "comments": "// Additional events here"
       }
    ]
-}  
+}

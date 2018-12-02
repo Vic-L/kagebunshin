@@ -6,17 +6,8 @@ const resize = require('./helpers/resizer').resize
 const AWS = require('aws-sdk');
 
 module.exports.onUpload = (event, context, callback) => {
+  const srcS3 = event.Records[0].s3
 
-  //** event.body is used for debugging in sls offline 
-  //** event is a string when debugging using postman
-  //** event is a JSON when triggered by an S3 event
-
-  let srcS3 = ''
-  if (process.env.STAGE === 'dev') {
-    srcS3 = JSON.parse(event.body) // for dev in sls offline
-  } else {
-    srcS3 = event.Records[0].s3 // in production with S3 event as input
-  }
 console.log("srcS3", srcS3) // for logging purpose
 
   const srcBucket = srcS3.bucket.name

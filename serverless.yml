@@ -1,4 +1,4 @@
-custom: 
+custom:
   service: ${file(env.yml):service}
   provider: ${file(env.yml):provider}
   s3: ${file(env.yml):s3}
@@ -24,18 +24,9 @@ provider:
     SRC_BUCKET_NAME: ${self:custom.s3.${opt:stage, 'dev'}SrcBucketName}
     S3_ACCESS_KEY_ID: ${self:custom.s3.${opt:stage, 'dev'}AccessKeyId}
     S3_SECRET_ACCESS_KEY: ${self:custom.s3.${opt:stage, 'dev'}SecretAccessKey}
-    STAGE: ${opt:stage, 'dev'}
 
 functions:
   onUpload:
     handler: handler.onUpload
     tags:
       Name: ${self:custom.provider.awsTagName}
-    # only use events for testing on dev and local
-    # in production this lambda should be used as a event listener on S3 bucket
-    ## UNCOMMENT FOR DEVELOPMENT
-    # events:
-    #   - http:
-    #       path: '/onUpload'
-    #       method: post
-    #       cors: true

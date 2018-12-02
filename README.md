@@ -18,38 +18,18 @@ To deploy to AWS using named profile:
 
 This project is meant to be plug and play. In the event you need something more than what is set up, you can develop and debug.
 
-Before you start development, you might want to create a separate pair of `src` and `dst` buckets for development purpose. Whichever the case, upload an image in your `src` bucket.
+Before you start development, create a pair of `src` and `dst` buckets for development purpose. Upload an image in your `src` bucket. This is because during development, the copying of files from `src` bucket to `dst` will be executed on the AWS.
 
-Uncomment the section below `## UNCOMMENT FOR DEVELOPMENT` in serverless.yml file to allow triggering the function via a http call.
+In the `event.json` file, replace `<BUCKET_NAME>` with your `src` bucket name and `<PATH_TO_IMAGE>` with the path to the image in the `src` bucket. The `json` inside `event.json` follows the [exact JSON structure of a S3 put event](https://docs.aws.amazon.com/lambda/latest/dg/eventsources.html#eventsources-s3-put).
 
-The purpose of the http call is to simulate an S3 put event. Use [postman](https://www.getpostman.com/) or a similar service to mock the api request.
+Then run this command to debug:
 
-It should be a `POST` request to the url `http://localhost:8000/onUpload`, with an `application/json` type body like below:
+`sls invoke local -f onUpload -p event.json`
 
-```
-{
-  "s3SchemaVersion": "1.0",
-  "configurationId": "onUpload",
-  "bucket":  {
-    "name": "<BUCKET_NAME>",
-    "ownerIdentity": { "principalId": "something" },
-    "arn": "something"
-  },
-  "object": {
-    "key": "<path/to/image.jpg>",
-    "size": 10000,
-    "eTag": "something",
-    "sequencer": "something"
-  }
-}
-```
+Serverless will use the call the `onUpload` function using the content in `event.json` as the `event` param.
 
-This is the exact [JSON structure of a S3 put event](https://docs.aws.amazon.com/lambda/latest/dg/eventsources.html#eventsources-s3-put).
+## TODOs
 
-Replace the `<BUCKET_NAME>` and `path/to/image.jpg` accordingly to your object in an S3 bucket. This will be the request body to be sent as a POST request during development or debugging. Note that the actual object structure is different (as shown correctly in `event.json`), but for development environment, this snippet is expected by the code.
-
-Then run this command to start development:
-
-`sls offline start`
-
-Press send in postman to start the process. Note the the image is resized and copied in the cloud, although you are doing development work.
+* not only jpgs
+* dynamically load images size arrays
+* code in a way that can use other cloud providers
