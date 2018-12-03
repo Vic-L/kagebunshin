@@ -29,7 +29,7 @@ Then run this command to debug:
 Serverless will use the call the `onUpload` function using the content in `event.json` as the `event` param.
 
 # FEATURES
-In the `env.yml` file, add/remove widths that you want to crop the image according to. Follow the syntax as shown in `env.sample.yml` file.
+In the `env.yml` file, append widths that you want to crop the image according to to the `widths` variable, separated by comma. Follow the syntax as shown in `env.sample.yml` file.
 
 
 ## TODOs
