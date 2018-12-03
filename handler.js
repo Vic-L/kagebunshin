@@ -2,7 +2,6 @@
 
 const handleS3Error = require('./helpers/errors').handleS3Error
 const resizer = require('./helpers/resizer')
-
 const AWS = require('aws-sdk')
 
 module.exports.onUpload = async (event, context) => {
@@ -49,7 +48,8 @@ module.exports.onUpload = async (event, context) => {
 
       const buffer = await resizer.resize(srcObject.Body, width, size)
 
-      let dstKey = srcKey.replace(/\.jpg$/, `_${width}.jpg`) // add dimension to name of file
+      // add dimension to name of file
+      let dstKey = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.$1`)
 
       const dstParams = {
         Bucket: dstBucket,
