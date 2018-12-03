@@ -27,6 +27,11 @@ module.exports.onUpload = async (event, context) => {
 
     const dstBucket = process.env.DST_BUCKET_NAME
 
+    const acceptedContentTypes = ['image/jpeg', 'image/jpg', 'image/png']
+    if (!acceptedContentTypes.includes(srcObject.ContentType)) {
+      throw(`Invalid image type. Accepted Content Types are ${acceptedContentTypes.join(', ')}`)
+    }
+
     // copy original
     const dstParams = {
       Bucket: dstBucket,

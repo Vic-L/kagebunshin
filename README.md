@@ -30,6 +30,5 @@ Serverless will use the call the `onUpload` function using the content in `event
 
 ## TODOs
 
-* not only jpgs
 * dynamically load images size arrays
 * code in a way that can use other cloud providers
