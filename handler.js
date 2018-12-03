@@ -45,12 +45,11 @@ module.exports.onUpload = async (event, context) => {
 
     console.log("Uploaded original copy")
 
-      // resize and upload the rest
-    const widths = [400, 768, 1200]
+    // resize and upload the rest
     const size = await resizer.size(srcObject.Body)
 
-    for (const width of widths) {
-
+    for (const widthStr of process.env.WIDTHS.split(',')) {
+      const width = Number(widthStr)
       const buffer = await resizer.resize(srcObject.Body, width, size)
 
       // add dimension to name of file
@@ -66,7 +65,6 @@ module.exports.onUpload = async (event, context) => {
       }
 
       await s3.upload(dstParams).promise()
-
       console.log(`Uploaded ${width} copy`)
     }
 
