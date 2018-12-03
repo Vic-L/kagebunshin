@@ -24,6 +24,7 @@ provider:
     SRC_BUCKET_NAME: ${self:custom.s3.${opt:stage, 'dev'}SrcBucketName}
     S3_ACCESS_KEY_ID: ${self:custom.s3.${opt:stage, 'dev'}AccessKeyId}
     S3_SECRET_ACCESS_KEY: ${self:custom.s3.${opt:stage, 'dev'}SecretAccessKey}
+    # SLS_DEBUG: '*'
 
 functions:
   onUpload:
