@@ -1,4 +1,7 @@
-module.exports.handleS3Error = (err) => {
+'use strict'
+
+exports.handleS3Error = (err) => {
+console.log('error:', JSON.stringify(err))
   return {
     statusCode: 500,
     headers: {
