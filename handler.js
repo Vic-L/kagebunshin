@@ -40,10 +40,7 @@ module.exports.onUpload = async (event, context) => {
       Body: srcObject.Body,
       CacheControl: "public, max-age=604800"
     }
-
-    await s3.putObject(dstParams).promise()
-
-    console.log("Uploaded original copy")
+    const uploadPromises = [s3.putObject(dstParams).promise()]
 
     // resize and upload the rest
     const size = await resizer.size(srcObject.Body)
@@ -64,9 +61,11 @@ module.exports.onUpload = async (event, context) => {
         CacheControl: "public, max-age=604800"
       }
 
-      await s3.upload(dstParams).promise()
       console.log(`Uploaded ${width} copy`)
+      uploadPromises.push(s3.upload(dstParams).promise())
     }
+
+    await Promise.all(uploadPromises)
 
     return {
       statusCode: 200,
