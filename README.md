@@ -6,13 +6,15 @@ Prepare an S3 bucket (srcBucket) where you will upload the images, and another d
 
 Create/update an `env.yml` file in the root directory, copy and paste the content of `env.sample.yml` in it, and fill up the respective values.
 
+Install docker.
+
 Time to deploy!
 
 ## DEPLOYMENT
 
 To deploy to AWS using named profile:
 
-`sls deploy --stage prod`
+`npm run deploy`
 
 ## DEVELOPMENT
 
@@ -24,12 +26,14 @@ In the `event.json` file, replace `<BUCKET_NAME>` with your `src` bucket name an
 
 Then run this command to debug:
 
-`sls invoke local -f onUpload -p event.json`
+`npm run dev`
 
-Serverless will use the call the `onUpload` function using the content in `event.json` as the `event` param.
+Serverless will first download the sharp folder that fits your local machine. Then, it will call the `onUpload` function using the content in `event.json` as the `event` param.
 
 # FEATURES
 In the `env.yml` file, append widths that you want to crop the image according to to the `widths` variable, separated by comma. Follow the syntax as shown in `env.sample.yml` file.
+
+Uses `sharp` to resize and produce produce extra image of the `webp` format. This will require lambda to have the correct binary. That is [easily installed with the `sharp` package with `npm`](http://sharp.pixelplumbing.com/en/stable/install/#aws-lambda) and [easily uploaded to lambda using docker](https://github.com/lovell/sharp/issues/1306#issuecomment-412498001).
 
 
 ## TODOs

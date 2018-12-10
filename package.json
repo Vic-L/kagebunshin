@@ -4,7 +4,10 @@
   "description": "Serverless image resizer with AWS S3 Reduced Redundancy Storage",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:dockerbuild": "rm -rf node_modules/sharp && docker run -v \"$PWD\":/var/task lambci/lambda:build-nodejs8.10 npm install sharp",
+    "deploy": "npm run deploy:dockerbuild && sls deploy --stage prod",
+    "dev": "rm -rf node_modules/sharp && npm i && sls invoke local -f onUpload -p event.json"
   },
   "repository": {
     "type": "git",
