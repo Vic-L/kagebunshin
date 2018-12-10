@@ -15,13 +15,13 @@ const resizer = {
     })
   },
 
-  resize: (buffer, width, size) => {
+  resize: (buffer, width, size, extension) => {
     return new Promise(async (resolve, reject) => {
       try {
         resolve(
           gm(buffer)
           .resize(Math.min(width, size.width), size.height / size.width * Math.min(width, size.width))
-          .stream()
+          .stream(extension)
         )
       } catch (err) {
         reject(err)

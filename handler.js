@@ -47,22 +47,28 @@ module.exports.onUpload = async (event, context) => {
 
     for (const widthStr of process.env.WIDTHS.split(',')) {
       const width = Number(widthStr)
-      const buffer = await resizer.resize(srcObject.Body, width, size)
+      const regexp = /(?:\.([^.]+))?$/
+      const extension = regexp.exec(srcKey)[1]
 
-      // add dimension to name of file
-      let dstKey = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.$1`)
+      // make a webp copy on top of original extension
+      for (const ext of [extension, 'webp']) {
+        const buffer = await resizer.resize(srcObject.Body, width, size, ext)
 
-      const dstParams = {
-        Bucket: dstBucket,
-        Key: dstKey,
-        Body: buffer,
-        ACL: "public-read",
-        ContentType: srcObject.ContentType,
-        CacheControl: "public, max-age=604800"
+        // add dimension to name of file
+        const dstKey = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.${ext}`)
+
+        const dstParams = {
+          Bucket: dstBucket,
+          Key: dstKey,
+          Body: buffer,
+          ACL: "public-read",
+          ContentType: ext === 'webp' ? 'image/webp' : srcObject.ContentType,
+          CacheControl: "public, max-age=604800"
+        }
+
+        console.log(`Uploaded ${width}.${ext} copy`)
+        uploadPromises.push(s3.upload(dstParams).promise())
       }
-
-      console.log(`Uploaded ${width} copy`)
-      uploadPromises.push(s3.upload(dstParams).promise())
     }
 
     await Promise.all(uploadPromises)
