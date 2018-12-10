@@ -26,9 +26,14 @@ In the `event.json` file, replace `<BUCKET_NAME>` with your `src` bucket name an
 
 Then run this command to debug:
 
-`npm run dev`
+```
+npm run installsharp # ensures installs binary
+sls invoke local -f onUpload -p event.json
+```
 
-Serverless will first download the sharp folder that fits your local machine. Then, it will call the `onUpload` function using the content in `event.json` as the `event` param.
+The first command will download the sharp folder that fits your local machine. It can be skipped if you have run it at least once after your lattest deploy to production.
+
+The second command will call the `onUpload` function using the content in `event.json` as the `event` param.
 
 # FEATURES
 In the `env.yml` file, append widths that you want to crop the image according to to the `widths` variable, separated by comma. Follow the syntax as shown in `env.sample.yml` file.
