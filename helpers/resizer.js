@@ -4,7 +4,6 @@ const gm = require('gm').subClass({imageMagick: true})
 
 const resizer = {
   size: (buffer) => {
-    // callback is a function with err and buffer as arguments
     return new Promise((resolve, reject) => {
       gm(buffer).size((err, size) => {
         if (err) {
@@ -15,6 +14,7 @@ const resizer = {
       })
     })
   },
+
   resize: (buffer, width, size) => {
     return new Promise(async (resolve, reject) => {
       try {
