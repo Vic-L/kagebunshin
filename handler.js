@@ -42,29 +42,38 @@ module.exports.onUpload = async (event, context) => {
     }
     const uploadPromises = [s3.putObject(dstParams).promise()]
 
-    // resize and upload the rest
-    for (const widthStr of process.env.WIDTHS.split(',')) {
-      const width = Number(widthStr)
+    // set widths, including undefined to represent original dimension
+    const widths = process.env.WIDTHS.split(',')
+    widths.unshift(undefined)
+
+    for (const width of widths) {
       const regexp = /(?:\.([^.]+))?$/
       const extension = regexp.exec(srcKey)[1]
 
       // make a webp copy on top of original extension
       for (const ext of [extension, 'webp']) {
-        const buffer = await resizer.resize(srcObject.Body, width, ext)
+        const buffer = await resizer.resize(srcObject.Body, Number(width), ext)
 
-        // add dimension to name of file
-        const dstKey = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.${ext}`)
-
+        // dstParams lacks required Key params
         const dstParams = {
           Bucket: dstBucket,
-          Key: dstKey,
           Body: buffer,
           ACL: "public-read",
           ContentType: ext === 'webp' ? 'image/webp' : srcObject.ContentType,
           CacheControl: "public, max-age=604800"
         }
 
-        console.log(`Uploading ${width}.${ext} copy`)
+        // add required Key params based on presence of `width` to differentiate between whether uploading original or cropped dimensions
+        if (width) {
+          // append dimension to filename for cropped dimensions
+          dstParams['Key'] = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.${ext}`)
+          console.log(`Uploading ${width}.${ext} copy`)
+        } else {
+          // upload original dimension
+          dstParams['Key'] = srcKey.replace(/\.(jpg|png|jpeg)$/, `.${ext}`)
+          console.log(`Uploading original ${ext} copy`)
+        }
+
         uploadPromises.push(s3.upload(dstParams).promise())
       }
     }
