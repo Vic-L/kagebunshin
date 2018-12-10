@@ -43,8 +43,6 @@ module.exports.onUpload = async (event, context) => {
     const uploadPromises = [s3.putObject(dstParams).promise()]
 
     // resize and upload the rest
-    const size = await resizer.size(srcObject.Body)
-
     for (const widthStr of process.env.WIDTHS.split(',')) {
       const width = Number(widthStr)
       const regexp = /(?:\.([^.]+))?$/
@@ -52,7 +50,7 @@ module.exports.onUpload = async (event, context) => {
 
       // make a webp copy on top of original extension
       for (const ext of [extension, 'webp']) {
-        const buffer = await resizer.resize(srcObject.Body, width, size, ext)
+        const buffer = await resizer.resize(srcObject.Body, width, ext)
 
         // add dimension to name of file
         const dstKey = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.${ext}`)
@@ -66,7 +64,7 @@ module.exports.onUpload = async (event, context) => {
           CacheControl: "public, max-age=604800"
         }
 
-        console.log(`Uploaded ${width}.${ext} copy`)
+        console.log(`Uploading ${width}.${ext} copy`)
         uploadPromises.push(s3.upload(dstParams).promise())
       }
     }

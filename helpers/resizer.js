@@ -1,28 +1,25 @@
 'use strict'
 
-const gm = require('gm').subClass({imageMagick: true})
+const sharp = require('sharp')
 
 const resizer = {
-  size: (buffer) => {
-    return new Promise((resolve, reject) => {
-      gm(buffer).size((err, size) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(size)
-        }
-      })
-    })
-  },
-
-  resize: (buffer, width, size, extension) => {
+  resize: (buffer, width, extension) => {
     return new Promise(async (resolve, reject) => {
       try {
-        resolve(
-          gm(buffer)
-          .resize(Math.min(width, size.width), size.height / size.width * Math.min(width, size.width))
-          .stream(extension)
-        )
+        if (extension === 'webp') {
+          resolve(
+            sharp(buffer)
+            .resize({ width })
+            .webp() // options here http://sharp.pixelplumbing.com/en/stable/api-output/#webp
+            .toBuffer()
+          )
+        } else {
+          resolve(
+            sharp(buffer)
+            .resize({ width })
+            .toBuffer()
+          )
+        }
       } catch (err) {
         reject(err)
       }
