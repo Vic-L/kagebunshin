@@ -5,6 +5,8 @@ const sharp = require('sharp')
 const resizer = {
   resize: (buffer, width, extension) => {
     return new Promise(async (resolve, reject) => {
+      // check for extension to decide whether to convert to webp format
+      // check for width to decide whether to initialize sharp object or just return buffer as converting to sharp object may result in bigger size than original
       try {
         if (extension === 'webp') {
           resolve(
@@ -14,11 +16,16 @@ const resizer = {
             .toBuffer()
           )
         } else {
-          resolve(
-            sharp(buffer)
-            .resize({ width })
-            .toBuffer()
-          )
+          if (width) {
+            resolve(
+              sharp(buffer)
+              .resize({ width })
+              .toBuffer()
+            )
+          } else {
+            // if width is isNaN just return the buffer as converting to sharp object
+            resolve(buffer)
+          }
         }
       } catch (err) {
         reject(err)
