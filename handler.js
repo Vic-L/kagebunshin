@@ -27,6 +27,10 @@ module.exports.onUpload = async (event, context) => {
 
     const dstBucket = process.env.DST_BUCKET_NAME
 
+    if (srcBucket === dstBucket) {
+      throw `Src and Dst bucket name are the same (${srcBucket}). This will cause an inifite loop. Use different bucket names.`;
+    }
+
     const acceptedContentTypes = ['image/jpeg', 'image/jpg', 'image/png']
     if (!acceptedContentTypes.includes(srcObject.ContentType)) {
       throw(`Invalid image type. Accepted Content Types are ${acceptedContentTypes.join(', ')}`)
