@@ -2,6 +2,7 @@ custom:
   service: ${file(env.yml):service}
   provider: ${file(env.yml):provider}
   s3: ${file(env.yml):${opt:stage, 'dev'}.s3}
+  usagePlan: ${file(env.yml):${opt:stage, 'dev'}.usagePlan}
   widths: ${file(env.yml):widths}
   serverless-offline:
     port: 8000
@@ -27,6 +28,10 @@ provider:
     S3_SECRET_ACCESS_KEY: ${self:custom.s3.secretAccessKey}
     WIDTHS: ${self:custom.widths}
     # SLS_DEBUG: '*'
+  usagePlan:
+    quota:
+      limit: ${self:custom.usagePlan.quota.limit}
+      period: ${self:custom.usagePlan.quota.period}
 
 functions:
   onUpload:
