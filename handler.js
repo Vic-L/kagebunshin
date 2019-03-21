@@ -49,7 +49,7 @@ module.exports.onUpload = async (event, context) => {
     // set widths, including undefined to represent original dimension
     const widths = process.env.WIDTHS.split(',')
     widths.unshift(0) // width 0 will produce low quality image for blur up
-    widths.unshift(undefined)
+    widths.unshift(undefined) // undefined represent original image
 
     for (const width of widths) {
       const regexp = /(?:\.([^.]+))?$/
@@ -57,7 +57,12 @@ module.exports.onUpload = async (event, context) => {
 
       // make a webp copy on top of original extension
       for (const ext of [extension, 'webp']) {
-        const buffer = await resizer.resize(srcObject.Body, Number(width), ext)
+        let buffer = null
+        if (width === 0) { // 0 represent blur up image
+          buffer = await resizer.generateBlurupImage(srcObject.Body, ext)
+        } else {
+          buffer = await resizer.resize(srcObject.Body, Number(width), ext)
+        }
 
         // dstParams lacks required Key params
         const dstParams = {

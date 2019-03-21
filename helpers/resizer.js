@@ -3,6 +3,27 @@
 const sharp = require('sharp')
 
 const resizer = {
+  generateBlurupImage: (buffer, extension) => {
+    return new Promise(async (resolve, reject) => {
+      if (extension === 'webp') {
+        resolve(
+          sharp(buffer)
+          .webp({ quality: 20, force: true })
+          .resize({ width: 20 })
+          .toBuffer()
+        )
+      } else {
+        // low quality image for blur up
+        resolve(
+          sharp(buffer)
+          .jpeg({ quality: 20, force: false })
+          .png({ quality: 20, force: false })
+          .resize({ width: 20 })
+          .toBuffer()
+        )
+      }
+    })
+  },
   resize: (buffer, width, extension) => {
     return new Promise(async (resolve, reject) => {
       // check for extension to decide whether to convert to webp format
@@ -16,14 +37,6 @@ const resizer = {
               .webp() // options here http://sharp.pixelplumbing.com/en/stable/api-output/#webp
               .toBuffer()
             )
-          } else if (width === 0) {
-            // low quality image for blur up
-            resolve(
-              sharp(buffer)
-              .webp({ quality: 20, force: true })
-              .resize({ width: 20 })
-              .toBuffer()
-            )
           } else {
             // if width is isNaN, it is the original dimension, just erturn as buffer
             resolve(buffer)
@@ -33,15 +46,6 @@ const resizer = {
             resolve(
               sharp(buffer)
               .resize({ width })
-              .toBuffer()
-            )
-          } else if (width === 0) {
-            // low quality image for blur up
-            resolve(
-              sharp(buffer)
-              .jpeg({ quality: 20, force: false })
-              .png({ quality: 20, force: false })
-              .resize({ width: 20 })
               .toBuffer()
             )
           } else {
