@@ -48,6 +48,7 @@ module.exports.onUpload = async (event, context) => {
 
     // set widths, including undefined to represent original dimension
     const widths = process.env.WIDTHS.split(',')
+    widths.unshift(0) // width 0 will produce low quality image for blur up
     widths.unshift(undefined)
 
     for (const width of widths) {
@@ -67,11 +68,14 @@ module.exports.onUpload = async (event, context) => {
           CacheControl: "public, max-age=604800"
         }
 
-        // add required Key params based on presence of `width` to differentiate between whether uploading original or cropped dimensions
+        // add required Key params based on presence of `width` to differentiate between whether uploading original/cropped/blurup dimensions
         if (width) {
           // append dimension to filename for cropped dimensions
           dstParams['Key'] = srcKey.replace(/\.(jpg|png|jpeg)$/, `_${width}.${ext}`)
           console.log(`Uploading ${width}.${ext} copy`)
+        } else if (width === 0) {
+          dstParams['Key'] = srcKey.replace(/\.(jpg|png|jpeg)$/, `_blurup.${ext}`) // force extension to jpg
+          console.log(`Uploading blurup copy`)
         } else {
           // upload original dimension
           dstParams['Key'] = srcKey.replace(/\.(jpg|png|jpeg)$/, `.${ext}`)
