@@ -42,7 +42,7 @@ module.exports.onUpload = async (event, context) => {
       Key: srcKey,
       ACL: "public-read",
       Body: srcObject.Body,
-      CacheControl: "public, max-age=604800"
+      CacheControl: "public, max-age=31556926"
     }
     const uploadPromises = [s3.putObject(dstParams).promise()]
 
@@ -70,7 +70,7 @@ module.exports.onUpload = async (event, context) => {
           Body: buffer,
           ACL: "public-read",
           ContentType: ext === 'webp' ? 'image/webp' : srcObject.ContentType,
-          CacheControl: "public, max-age=604800"
+          CacheControl: "public, max-age=31556926"
         }
 
         // add required Key params based on presence of `width` to differentiate between whether uploading original/cropped/blurup dimensions
