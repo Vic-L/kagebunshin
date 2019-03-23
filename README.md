@@ -6,7 +6,9 @@ Prepare an S3 bucket (srcBucket) where you will upload the images, and another d
 
 Create/update an `env.yml` file in the root directory, copy and paste the content of `env.sample.yml` in it, and fill up the respective values.
 
-Install docker.
+Install docker. The purpose of docker is to install the correct image cropping binary for the lamdba node 8.10 environment that lambda uses instead of that of your local machine.
+
+When running the deployment script, it will install the docker image prior to uploading to lambda.
 
 Time to deploy!
 
@@ -19,6 +21,8 @@ To deploy to AWS using named profile:
 ## DEVELOPMENT
 
 This project is meant to be plug and play. In the event you need something more than what is set up, you can develop and debug.
+
+Run `npm run installsharp` to cleanly install the correct `sharp` for your local machine.
 
 Before you start development, create a pair of `src` and `dst` buckets for development purpose. Upload an image in your `src` bucket. This is because during development, the copying of files from `src` bucket to `dst` will be executed on the AWS.
 
